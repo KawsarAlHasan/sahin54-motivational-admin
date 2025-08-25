@@ -1,17 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import {  getMockUsersForMessages } from "../api/api";
+// import { useQuery } from "@tanstack/react-query";
+// import {  getMockUsersForMessages } from "../api/api";
 
-export const useUsersForMessage = () => {
-  const {
-    data: usersForMessage = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["usersForMessage"],
-    queryFn: getMockUsersForMessages,
-  });
+// export const useUsersForMessage = () => {
+//   const {
+//     data: usersForMessage = [],
+//     isLoading,
+//     isError,
+//     error,
+//     refetch,
+//   } = useQuery({
+//     queryKey: ["usersForMessage"],
+//     queryFn: getMockUsersForMessages,
+//   });
 
-  return { usersForMessage, isLoading, isError, error, refetch };
-};
+//   return { usersForMessage, isLoading, isError, error, refetch };
+// };

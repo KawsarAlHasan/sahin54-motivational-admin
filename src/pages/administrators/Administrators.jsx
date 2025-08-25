@@ -1,30 +1,48 @@
-import { Avatar, Space, Table } from "antd";
+import { Avatar, message, Modal, Space, Table } from "antd";
 import IsError from "../../components/IsError";
 import IsLoading from "../../components/IsLoading";
-import { useAdministrators } from "../../services/administratorsService";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { API, useAllAdmins } from "../../api/api";
+import AddAdmin from "./AddAmin";
+import AdminEdit from "./AdminEdit";
 
 function Administrators() {
-  const { administrators, isLoading, isError, error, refetch } =
-    useAdministrators();
+  const { allAdmins, isLoading, isError, error, refetch } = useAllAdmins();
+
+  // 🗑️ delete confirm modal
+  const showDeleteConfirm = (adminId) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this admin?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      async onOk() {
+        try {
+          await API.post(`/admin/administrators/${adminId}/action/`, {
+            action: "delete",
+          });
+          message.success("Admin deleted successfully!");
+          refetch();
+        } catch (err) {
+          message.error(err.response?.data?.error || "Failed to delete admin");
+        }
+      },
+    });
+  };
 
   const columns = [
     {
       title: <span>Sl no.</span>,
-      dataIndex: "serial_number",
-      key: "serial_number",
-      render: (serial_number) => <span className="">#{serial_number}</span>,
+      dataIndex: "display_id",
+      key: "display_id",
+      render: (display_id) => <span className="">#{display_id}</span>,
     },
     {
       title: <span>User</span>,
-      dataIndex: "full_name",
-      key: "full_name",
-      render: (text, record) => (
-        <Space size="middle">
-          <Avatar className="w-[40px] h-[40px]" src={record.profile} />
-          <span className="">{text}</span>
-        </Space>
-      ),
+      dataIndex: "name",
+      key: "name",
+      render: (name) => <span className="">{name}</span>,
     },
     {
       title: <span>Email</span>,
@@ -34,51 +52,39 @@ function Administrators() {
     },
     {
       title: <span>Phone</span>,
-      dataIndex: "phone",
-      key: "phone",
-      render: (phone) => <span className="">{phone}</span>,
+      dataIndex: "contract",
+      key: "contract",
+      render: (contract) => <span className="">{contract}</span>,
     },
-    // {
-    //   title: <span >Answers</span>,
-    //   dataIndex: "question_answer",
-    //   key: "question_answer",
-    //   render: (question_answer) => (
-    //     <ViewAnswerModal question_answer={question_answer} />
-    //   ),
-    // },
-    // {
-    //   title: <span >Status</span>,
-    //   key: "status",
-    //   render: () => (
-    //     <Tag
-    //       className="w-full mr-5 text-center text-[20px] py-3"
-    //       color="#359700"
-    //     >
-    //       Active
-    //     </Tag>
-    //   ),
-    // },
     {
       title: <span>Has Access To</span>,
-      dataIndex: "role",
-      key: "role",
-      render: (role) => <span className="">{role}</span>,
+      dataIndex: "has_access_to",
+      key: "has_access_to",
+      render: (has_access_to) => <span className="">{has_access_to}</span>,
     },
     {
       title: <span>Action</span>,
       key: "action",
-      render: (_, record) => (
-        <Space size="middle">
-          <EditOutlined
-            // onClick={() => handleUserDetails(record)}
-            className="text-[23px] bg-[#006699] p-1 rounded-sm text-white hover:text-blue-300 cursor-pointer"
-          />
-          <DeleteOutlined
-            className="text-[23px] bg-[#E30000] p-1 rounded-sm text-white hover:text-red-300 cursor-pointer"
-            // onClick={() => showBlockConfirm(record.id)}
-          />
-        </Space>
-      ),
+      render: (_, record) => {
+        const isSuperAdmin = record.has_access_to === "superadmin";
+
+        return (
+          <Space size="middle">
+            <AdminEdit adminProfile={record} refetch={refetch} />
+
+            <DeleteOutlined
+              className={`text-[23px] bg-[#E30000] p-1 rounded-sm text-white ${
+                isSuperAdmin
+                  ? "cursor-not-allowed opacity-50"
+                  : "hover:text-red-300 cursor-pointer"
+              }`}
+              onClick={
+                isSuperAdmin ? undefined : () => showDeleteConfirm(record.id)
+              }
+            />
+          </Space>
+        );
+      },
     },
   ];
 
@@ -92,9 +98,11 @@ function Administrators() {
 
   return (
     <div className="p-4">
+      <AddAdmin refetch={refetch} />
+
       <Table
         columns={columns}
-        dataSource={administrators}
+        dataSource={allAdmins}
         rowKey="id"
         loading={isLoading}
         pagination={false}

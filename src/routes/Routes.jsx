@@ -10,8 +10,8 @@ import Test from "../Test";
 import UserManagement from "../pages/usersManagement/UserManagement";
 import CheckCode from "../pages/login/CheckCode";
 import Administrators from "../pages/administrators/Administrators";
-import Chat from "../pages/chat/Chat";
 import Payments from "../pages/payments/Payments";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +36,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <PrivateRoute>
+        <MainLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         path: "/",
@@ -51,34 +55,9 @@ export const router = createBrowserRouter([
         element: <Administrators />,
       },
       {
-        path: "/chat",
-        element: <Chat />,
-      },
-      {
         path: "/payments",
         element: <Payments />,
       },
-      //   {
-      //     path: "/tasks",
-      //     element: <Tasks />,
-      //   },
-      //   {
-      //     path: "/leaderboard",
-      //     element: <Leaderboard />,
-      //   },
-      //   {
-      //     path: "/profile",
-      //     element: <Profile />,
-      //   },
-      //   {
-      //     path: "/terms-conditions",
-      //     element: <TermsConditions />,
-      //   },
-      //   {
-      //     path: "/privacy-policy",
-      //     element: <PrivacyPolicy />,
-      //   },
-
       {
         path: "/test",
         element: <Test />,

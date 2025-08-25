@@ -1,17 +1,10 @@
 import { Menu } from "antd";
-import {
-  AppstoreOutlined,
-  ContainerOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { AppstoreOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
-import { MdOutlinePayment, MdLeaderboard } from "react-icons/md";
 import { FaBuildingFlag } from "react-icons/fa6";
-import { SlBadge } from "react-icons/sl";
+import { signOutAdmin } from "../api/api";
 
-// import { signOutAdmin } from "../api/api";
 
 const { SubMenu } = Menu;
 
@@ -20,7 +13,7 @@ const Sidebar = ({ onClick }) => {
 
   const navigate = useNavigate();
   const handleSignOut = () => {
-    // signOutAdmin();
+    signOutAdmin();
     navigate("/login");
   };
 
@@ -30,7 +23,7 @@ const Sidebar = ({ onClick }) => {
     if (path === "/") return ["1"];
     if (path === "/user-management") return ["2"];
     if (path === "/administrators") return ["3"];
-    if (path === "/chat") return ["4"];
+    if (path === "/payments") return ["payments"];
     return ["1"];
   };
 
@@ -56,11 +49,11 @@ const Sidebar = ({ onClick }) => {
       label: <Link to="/payments">Payments</Link>,
     },
 
-    {
-      key: "4",
-      icon: <MdOutlinePayment />,
-      label: <Link to="/chat">Chat</Link>,
-    },
+    // {
+    //   key: "4",
+    //   icon: <MdOutlinePayment />,
+    //   label: <Link to="/chat">Chat</Link>,
+    // },
 
     // Add logout as a menu item at the bottom
     {

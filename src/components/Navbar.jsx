@@ -1,44 +1,50 @@
-import React, { useState } from "react";
-import { Avatar, Dropdown, Button, Drawer, Badge, Space } from "antd";
+import { Avatar, Dropdown, Button, Divider } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import logoImage from "../assets/logo.png";
-import {
-  MenuOutlined,
-  BellOutlined,
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { MenuOutlined, UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { signOutAdmin, useAdminDashboard } from "../api/api";
+import ChangePassword from "./ChangePassword";
+import AccountSetting from "./AccountSetting";
 
 const Navbar = ({ showDrawer }) => {
+  const { adminDashboard, isLoading, isError, error, refetch } =
+    useAdminDashboard();
+
   const navigate = useNavigate();
 
-  const [drawerVisible, setDrawerVisible] = useState(false);
-
   const handleSignOut = () => {
-    // signOutAdmin();
+    signOutAdmin();
     navigate("/login");
   };
 
+  const adminProfile = adminDashboard?.admin_profile;
+
   const profileMenuItems = [
     {
-      key: "profile",
+      key: "adminProfile",
       label: (
-        <Link to="/profile" className="flex items-center gap-2 px-1 py-2">
-          <UserOutlined /> Profile
-        </Link>
+        <div className="mb-[-25px] cursor-default">
+          <h1 className="text-[#242424] text-[20px] font-bold">
+            {adminProfile?.name}{" "}
+            <span className="text-[16px] font-normal">
+              ({adminProfile?.role})
+            </span>
+          </h1>
+          <p className="text-[#242424] text-[12px] my-[-10px]">
+            {adminProfile?.email}
+          </p>
+
+          <Divider />
+        </div>
       ),
     },
     {
+      key: "profile",
+      label: <AccountSetting adminProfile={adminProfile} refetch={refetch} />,
+    },
+    {
       key: "change-password",
-      label: (
-        <Link
-          to="/change-password"
-          className="flex items-center gap-2 px-1 py-2"
-        >
-          <SettingOutlined /> Change Password
-        </Link>
-      ),
+      label: <ChangePassword />,
     },
     {
       key: "logout",
@@ -76,22 +82,11 @@ const Navbar = ({ showDrawer }) => {
 
           {/* Right section */}
           <div className="flex items-center gap-4 lg:gap-8">
-            <Badge
-              count={10}
-              size="small"
-              className="cursor-pointer p-2 rounded-full bg-white hover:text-blue-500 transition-colors"
-            >
-              <BellOutlined
-                className="text-2xl"
-                onClick={() => setDrawerVisible(true)}
-              />
-            </Badge>
-
             <Dropdown
               menu={{ items: profileMenuItems }}
               trigger={["click"]}
               placement="bottomRight"
-              overlayClassName="w-48"
+              overlayClassName="w-[300px]"
             >
               <Avatar
                 icon={<UserOutlined className="" />}
@@ -102,19 +97,6 @@ const Navbar = ({ showDrawer }) => {
           </div>
         </div>
       </div>
-
-      <Drawer
-        title="Notifications"
-        placement="right"
-        onClose={() => setDrawerVisible(false)}
-        open={drawerVisible}
-        width={300}
-        bodyStyle={{ padding: 0 }}
-      >
-        <div className="p-4">
-          <p>No new notifications</p>
-        </div>
-      </Drawer>
     </header>
   );
 };
