@@ -11,21 +11,19 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false); // Loading state for login button
 
   const onFinish = async (values) => {
-    setLoading(true); 
+    setLoading(true);
     try {
-      const response = await API.post("/admin/login", {
+      const response = await API.post("/password-reset-request/", {
         email: values.email,
       });
 
-      console.log(response, "response");
-
       // // If successful, save the token in localStorage
-      // localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("email", values.email);
 
       // Show success message
       message.success("Send code on your email successful!");
 
-      // navigate("/check-code");
+      navigate("/check-code");
     } catch (error) {
       // Show error message
       message.error(

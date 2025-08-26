@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { API } from "../../api/api";
 
 const CheckCode = () => {
   const navigate = useNavigate();
@@ -12,18 +13,18 @@ const CheckCode = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      // Simulate API verification
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await API.post("/verify-reset-otp/", {
+        otp_code: values.otp,
+      });
 
-      if (values.otp === "12345") {
-        // Example verification
-        message.success("OTP verified successfully!");
-        navigate("/set-new-password");
-      } else {
-        message.error("Invalid OTP. Please try again.");
-      }
+      message.success("OTP verified successfully!");
+
+      navigate("/set-new-password");
+
+      console.log("response", response);
     } catch (error) {
       message.error("Verification failed. Please try again.");
+      console.log(error, "error");
     } finally {
       setLoading(false);
     }

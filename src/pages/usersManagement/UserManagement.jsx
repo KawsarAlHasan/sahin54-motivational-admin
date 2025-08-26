@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import ViewAnswerModal from "./ViewAnswerModal";
 import { API, useUsers } from "../../api/api";
+import ViewUser from "./ViewUser";
 // import UserDetailsModal from "./UserDetailsModal";
 
 const { confirm } = Modal;
@@ -116,38 +117,13 @@ function UserManagement() {
       key: "phone_number",
       render: (phone) => <span>{phone}</span>,
     },
-    // {
-    //   title: <span>Leaderboard</span>,
-    //   dataIndex: "leaderboard",
-    //   key: "leaderboard",
-    //   render: (leaderboard) => <span>{leaderboard}</span>,
-    // },
     {
       title: <span>Subscription</span>,
       dataIndex: "subscription",
       key: "subscription",
       render: (subscription) => <span>{subscription}</span>,
     },
-    // {
-    //   title: <span>Answers</span>,
-    //   dataIndex: "question_answer",
-    //   key: "question_answer",
-    //   render: (question_answer) => (
-    //     <ViewAnswerModal question_answer={question_answer} />
-    //   ),
-    // },
-    // {
-    //   title: <span>Status</span>,
-    //   key: "status",
-    //   render: () => (
-    //     <Tag
-    //       className="w-full mr-5 text-center text-[20px] py-3"
-    //       color="#359700"
-    //     >
-    //       Active
-    //     </Tag>
-    //   ),
-    // },
+
     {
       title: <span>Action</span>,
       key: "action",
@@ -159,7 +135,7 @@ function UserManagement() {
           /> */}
           <MdBlock
             className="text-[23px] text-red-400 hover:text-red-300 cursor-pointer"
-            onClick={() => showBlockConfirm(record)}
+            onClick={() => handleUserDetails(record)}
           />
         </Space>
       ),
@@ -174,7 +150,6 @@ function UserManagement() {
     return <IsError error={error} refetch={refetch} />;
   }
 
-  console.log("allUsers", users);
 
   return (
     <div className="p-4">
@@ -193,11 +168,12 @@ function UserManagement() {
         loading={isLoading}
       />
 
-      {/* <UserDetailsModal
+      <ViewUser
         userDetailsData={userDetailsData}
         isOpen={isViewModalOpen}
         onClose={handleModalClose}
-      /> */}
+        refetch={refetch}
+      />
     </div>
   );
 }
