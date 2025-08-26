@@ -3,13 +3,15 @@ import { AppstoreOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 import { FaBuildingFlag } from "react-icons/fa6";
-import { signOutAdmin } from "../api/api";
-
+import { signOutAdmin, useAdminDashboard } from "../api/api";
 
 const { SubMenu } = Menu;
 
 const Sidebar = ({ onClick }) => {
   const location = useLocation();
+
+  const { adminDashboard, isLoading, isError, error, refetch } =
+    useAdminDashboard();
 
   const navigate = useNavigate();
   const handleSignOut = () => {
@@ -27,6 +29,8 @@ const Sidebar = ({ onClick }) => {
     return ["1"];
   };
 
+  const isSuperAdmin = adminDashboard?.admin_profile?.role == "superadmin";
+
   const sidebarItems = [
     {
       key: "1",
@@ -38,22 +42,22 @@ const Sidebar = ({ onClick }) => {
       icon: <FaUsers />,
       label: <Link to="/user-management">User Management</Link>,
     },
-    {
-      key: "3",
-      icon: <FaBuildingFlag />,
-      label: <Link to="/administrators">Administrators</Link>,
-    },
+
+    ...(isSuperAdmin
+      ? [
+          {
+            key: "3",
+            icon: <FaBuildingFlag />,
+            label: <Link to="/administrators">Administrators</Link>,
+          },
+        ]
+      : []),
+
     {
       key: "payments",
       icon: <FaBuildingFlag />,
       label: <Link to="/payments">Payments</Link>,
     },
-
-    // {
-    //   key: "4",
-    //   icon: <MdOutlinePayment />,
-    //   label: <Link to="/chat">Chat</Link>,
-    // },
 
     // Add logout as a menu item at the bottom
     {

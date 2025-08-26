@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, Checkbox, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { API } from "../../api/api";
 
 // import { API } from "../../api/api";
 
@@ -10,11 +11,13 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false); // Loading state for login button
 
   const onFinish = async (values) => {
-    setLoading(true); // Start loading when submitting form
+    setLoading(true); 
     try {
-      // const response = await API.post("/admin/login", {
-      //   email: values.email,
-      // });
+      const response = await API.post("/admin/login", {
+        email: values.email,
+      });
+
+      console.log(response, "response");
 
       // // If successful, save the token in localStorage
       // localStorage.setItem("token", response.data.data.token);
@@ -22,7 +25,7 @@ const ForgotPassword = () => {
       // Show success message
       message.success("Send code on your email successful!");
 
-      navigate("/check-code");
+      // navigate("/check-code");
     } catch (error) {
       // Show error message
       message.error(
