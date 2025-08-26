@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { EditOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Modal, Form, Input, message } from "antd";
+import { Button, Modal, Form, Input, message, Select } from "antd";
 import { API } from "../../api/api";
 
 const AdminEdit = ({ adminProfile, refetch }) => {
@@ -21,6 +21,8 @@ const AdminEdit = ({ adminProfile, refetch }) => {
         phone: values.contract,
         role: values.has_access_to,
       };
+
+      console.log(submitData, "submitData");
 
       await API.put(
         `/admin/administrators/${adminProfile.id}/update/`,
@@ -96,7 +98,10 @@ const AdminEdit = ({ adminProfile, refetch }) => {
           </Form.Item>
 
           <Form.Item label="Role" name="has_access_to">
-            <Input />
+            <Select placeholder="Select role">
+              <Option value="Stap_admin">Stap_admin</Option>
+              <Option value="superadmin">Superadmin</Option>
+            </Select>
           </Form.Item>
 
           <Form.Item>
