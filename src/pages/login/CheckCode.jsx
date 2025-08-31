@@ -3,8 +3,10 @@ import { Form, Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { API } from "../../api/api";
+import axios from "axios";
 
 const CheckCode = () => {
+  const email = localStorage.getItem("email");
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [resendLoading, setResendLoading] = useState(false);
@@ -13,9 +15,14 @@ const CheckCode = () => {
   const onFinish = async (values) => {
     setLoading(true);
     try {
-      const response = await API.post("/verify-reset-otp/", {
-        otp_code: values.otp,
-      });
+      console.log("values", values.otp);
+
+      const response = await axios.post(
+        "http://10.10.7.93:9001/api/verify-reset-otp/",
+        {
+          otp_code: "168898",
+        }
+      );
 
       message.success("OTP verified successfully!");
 
@@ -23,7 +30,11 @@ const CheckCode = () => {
 
       console.log("response", response);
     } catch (error) {
-      message.error("Verification failed. Please try again.");
+      const errorMessage =
+        error.response?.data?.non_field_errors[0] ||
+        "Verification failed. Please try again.";
+
+      message.error(errorMessage);
       console.log(error, "error");
     } finally {
       setLoading(false);
@@ -33,7 +44,10 @@ const CheckCode = () => {
   const handleResend = async () => {
     setResendLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await API.post("/password-reset-request/", {
+        email: email,
+      });
+
       message.success("New OTP sent to your email!");
     } catch (error) {
       message.error("Failed to resend OTP. Please try again.");
@@ -52,8 +66,8 @@ const CheckCode = () => {
             Check Your Email
           </h2>
           <p className="text-gray-600">
-            We sent a reset link to contact@dscode...com. Enter the 5-digit code
-            from the email.
+            We sent a reset link to <strong>{email}</strong>. Enter the 6-digit
+            code from the email.
           </p>
         </div>
 
@@ -66,14 +80,14 @@ const CheckCode = () => {
                 message: "Please input the OTP!",
               },
               {
-                pattern: /^[0-9]{5}$/,
-                message: "Please enter a valid 5-digit code",
+                pattern: /^[0-9]{6}$/,
+                message: "Please enter a valid 6-digit code",
               },
             ]}
             className="mb-6 text-center"
           >
             <Input.OTP
-              length={5}
+              length={6}
               formatter={(str) => str.toUpperCase()}
               inputType="number"
               inputStyle={{

@@ -54,3 +54,14 @@
 .ant-menu .ant-menu-submenu .ant-menu-item-selected {
   background-color: #006699 !important;
 }
+
+
+.my-main-button {
+  background-color: #006699 !important;
+  color: #ffffff !important;
+}
+
+.my-main-button:hover {
+  background-color: #0279b4 !important;
+  color: #ffffff !important;
+}

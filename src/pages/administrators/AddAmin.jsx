@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Form, Input, Select, message } from "antd";
+import { FaPlus } from "react-icons/fa";
+
 import { API } from "../../api/api";
 
 const { Option } = Select;
@@ -27,8 +29,8 @@ const AddAdmin = ({ refetch }) => {
 
   return (
     <>
-      <Button type="primary" className="mb-2" onClick={showModal}>
-        New Administrators Profile Create
+      <Button type="primary" className="mb-2 my-main-button" onClick={showModal}>
+        <FaPlus /> New Administrators Profile Create
       </Button>
 
       <Modal
@@ -77,7 +79,7 @@ const AddAdmin = ({ refetch }) => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading} block>
+            <Button className="my-main-button" type="primary" htmlType="submit" loading={loading} block>
               Create Admin
             </Button>
           </Form.Item>
