@@ -90,7 +90,7 @@ const AccountSetting = ({ adminProfile, refetch }) => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading} block>
+            <Button className="my-main-button" type="primary" htmlType="submit" loading={loading} block>
               Update
             </Button>
           </Form.Item>

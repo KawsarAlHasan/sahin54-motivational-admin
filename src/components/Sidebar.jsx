@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 import { FaBuildingFlag } from "react-icons/fa6";
 import { signOutAdmin, useAdminDashboard } from "../api/api";
+import { MdOutlinePayment } from "react-icons/md";
+
 
 const { SubMenu } = Menu;
 
@@ -55,7 +57,7 @@ const Sidebar = ({ onClick }) => {
 
     {
       key: "payments",
-      icon: <FaBuildingFlag />,
+      icon: <MdOutlinePayment />,
       label: <Link to="/payments">Payments</Link>,
     },
 
